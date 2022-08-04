@@ -160,5 +160,6 @@ currentLocationButton.addEventListener("click", getCurrentLocation);
 searchCity("Berlin");
 
 </script>
+<footer><a href="https://github.com/EniseK/ProjectWeather8/blob/main/.gitattributes">GitHub</a></footer>
   </body>
 </html>
