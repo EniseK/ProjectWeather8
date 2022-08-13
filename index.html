@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Weather</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+    <style>h2 {padding: 30px 30px;
+      display: inline;
+      text-align: center;
+    }
+.col-3{padding:50px 50px;
+font-size: 19px;
+font-weight: 100px;
+}
+
+.card-group {padding: 55px 40px;}
+img {
+max-height: 5cm;
+max-width: 3cm;
+display: block;
+margin: 0 auto;
+padding: 10px 10px;}
+h5{display: block;
+margin: 0 auto;}
+.card-text{font-weight: bold;
+text-align: center;}
+.sun{background:none;}
+button{width: 6cm;
+text-align: center;
+  background-color: rgb(29, 167, 84);
+max-width: 300px;}
+::placeholder {font-weight: bold;}
+.container{border: 1px solid black;}
+h2{font-size: 18px;}
+p {text-transform: capitalize;}
+input {max-width: 300px;
+float: right;
+}
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+         
+
+      <div class="row"><div class="col-3">
+        <h1 id="city">City</h1>
+      <span class="temperature" id="temperature"></span><span class="units">°C</span>        
+      <p id="temperature-description">Description</p>
+      </div>
+<div class="col-3"><h2>Sunday 18:00</h2></div>
+<div class="col-3"><form class="search-form" for="citysearch" id="search-form">
+        <input type="search" placeholder="Enter City Name" autofocus="on" autocomplete="off" id="city-input" class="form-control shadow-sm"/> <input type="submit" value="Search" class="form-control btn btn-primary shadow-sm w-100"/></form>
+        <button class="btn btn-success w-100" id="current-location-button">Current Location</button><br/><br/>
+ </div>
+      
+<br/>
+
+<br/><span><h2>Precipitation: 4% </h2>        <h2>   Humidity:52%      </h2>       <h2>Wind: 16% km/h</h2></span>
+
+<div class="card-group">
+  <div class="card"><h5 class="card-title">Monday</h5>
+    <img src="cloudRain.gif" alt="cloudrain">
+    <div class="card-body">
+        <p class="card-text">25°/12°</p>
+        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      </div>
+    </div>
+      <div class="card"><h5 class="card-title">Tuesday</h5>
+        <img src="cloudRain.gif" alt="cloudrain">
+        <div class="card-body">
+      <p class="card-text">23°/11°</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div><div class="card"><h5 class="card-title">Wednesday</h5>
+    <img src="CloudSun.png" alt="cloudsun">
+    <div class="card-body">
+      
+      <p class="card-text">28°/15°</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card"><h5 class="card-title">Thursday</h5>
+    <img src="SunEmoji.png" alt="sun">
+    <div class="card-body">
+      
+      <p class="card-text">29°/15°</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card"><h5 class="card-title">Friday</h5>
+    <img src="thunderCloud.png" alt="cloudthunder">
+    <div class="card-body">
+      
+      <p class="card-text">22°/12°</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+</div>
+</div>
+<footer> <p>Hosted by <a href="https://www.netlify.com/">Netlify</a></p></footer>
+<script>
+  
+
+    let currentTime = new Date();
+    let h2 = document.querySelector("h2");
+    let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    let day = days[currentTime.getDay()];
+    let months = ["Jan", "Feb", "March", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let month = months[currentTime.getMonth()];
+    let dates = currentTime.getDate();
+    let hours = currentTime.getHours();
+    let minutes = currentTime.getMinutes();
+
+h2.innerHTML = `${day}, ${month} ${dates}, ${hours}: ${minutes}`;
+
+function displayTemperature(response) {
+    document.querySelector("#city").innerHTML = response.data.name;
+    document.querySelector("#temperature").innerHTML = Math.round(response.data.main.temp);
+    document.querySelector("#temperature-description").innerHTML = response.data.weather[0].main;
+  }
+
+
+function searchCity(city) {
+    let apiKey = "055aa66e068d66b797d53ba8e4aaef23";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(displayTemperature);
+}
+
+function handleSubmit(event) {
+    event.preventDefault();
+    let city = document.querySelector("#city-input").value;
+    searchCity(city);
+}
+
+function searchLocation(position){
+    let apiKey = "055aa66e068d66b797d53ba8e4aaef23";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(displayTemperature);
+}
+
+let searchForm = document.querySelector("#search-form");
+searchForm.addEventListener("submit", handleSubmit);
+
+function getCurrentLocation(event) {
+  event.preventDefault();
+  navigator.geolocation.getCurrentPosition(searchLocation);
+}
+
+let currentLocationButton = document.querySelector("#current-location-button");
+currentLocationButton.addEventListener("click", getCurrentLocation);
+
+searchCity("Berlin");
+
+</script>
+<footer><a href="https://github.com/EniseK/ProjectWeather8/blob/main/.gitattributes">GitHub</a></footer>
+  </body>
+</html>
